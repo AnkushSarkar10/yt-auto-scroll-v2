@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "youtube shorts auto-scroll",
+  "version": "2.0.0",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "description": "automatically scrolls to the next youtube short when the current one finishes playing.",
+  "action": {
+    "default_icon": {
+      "48": "icons/icon-48.png"
+    },
+    "default_popup": "src/popup/index.html"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "assets/main.ts-loader-jQbGa1Wi.js"
+      ],
+      "matches": [
+        "https://*/*"
+      ],
+      "css": [
+        "assets/main-0oJkFtPA.css"
+      ]
+    }
+  ],
+  "permissions": [],
+  "side_panel": {
+    "default_path": "src/sidepanel/index.html"
+  },
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "https://*/*"
+      ],
+      "resources": [
+        "assets/_plugin-vue_export-helper-qqerUqf-.js",
+        "assets/main.ts-CbqA5_Ch.js"
+      ],
+      "use_dynamic_url": false
+    }
+  ]
+}
