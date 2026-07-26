@@ -1,10 +1,43 @@
-![YouTube Shorts Auto Scroll logo](public/icons/icon-128.png)
+<div align="center">
+  <img src="public/icons/icon-128.png" alt="youtube shorts auto scroll logo" width="128">
 
-# youtube shorts auto scroll
+  <h1>youtube shorts auto scroll</h1>
 
-this is a chrome extension. when on youtube shorts page this extension adds a toggle for auto scrolling.
-when enabled it automatically scrolls to the next short when one finishes.
+  <p>automatically move to the next youtube short when the current video ends.</p>
+</div>
 
-## built using these
+## about
 
-<img src="src/assets/vue.svg" alt="Vue" height="48"> <img src="src/assets/vite.svg" alt="Vite" height="48"> <img src="src/assets/crx.svg" alt="CRXJS" height="48">
+this chrome extension adds an auto-scroll toggle to youtube shorts. when enabled, it moves to the next short as soon as the current video finishes.
+
+## built using
+
+<table align="center">
+  <tr>
+    <td align="center" width="120">
+      <img src="src/assets/vue.svg" alt="vue" height="48"><br>
+      <sub>vue</sub>
+    </td>
+    <td align="center" width="120">
+      <img src="src/assets/vite.svg" alt="vite" height="48"><br>
+      <sub>vite</sub>
+    </td>
+    <td align="center" width="120">
+      <img src="src/assets/crx.svg" alt="crxjs" height="48"><br>
+      <sub>crxjs</sub>
+    </td>
+  </tr>
+</table>
+
+## development
+
+```sh
+pnpm install
+pnpm dev
+```
+
+create a production build with:
+
+```sh
+pnpm build
+```
