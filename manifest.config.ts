@@ -20,9 +20,10 @@ export default defineManifest({
   },
   content_scripts: [{
     js: ['src/content/main.ts'],
-    matches: ['https://*/*'],
+    matches: ['https://www.youtube.com/shorts/*'],
   }],
   permissions: [],
+  host_permissions: ['https://www.youtube.com/*'],
   side_panel: {
     default_path: 'src/sidepanel/index.html',
   },

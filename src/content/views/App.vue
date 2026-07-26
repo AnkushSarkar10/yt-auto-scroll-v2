@@ -13,7 +13,7 @@ const toggle = () => show.value = !show.value
       class="popup-content"
       :class="show ? 'opacity-100' : 'opacity-0'"
     >
-      <h1>HELLO CRXJS</h1>
+      <h1>HELLO BLAZEKUSH</h1>
     </div>
     <button
       class="toggle-button"

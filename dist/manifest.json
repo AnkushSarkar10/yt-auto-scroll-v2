@@ -18,28 +18,32 @@
   "content_scripts": [
     {
       "js": [
-        "assets/main.ts-loader-jQbGa1Wi.js"
+        "src/content/main.ts-loader.js"
       ],
       "matches": [
-        "https://*/*"
-      ],
-      "css": [
-        "assets/main-0oJkFtPA.css"
+        "https://www.youtube.com/shorts/*"
       ]
     }
   ],
   "permissions": [],
+  "host_permissions": [
+    "https://www.youtube.com/*"
+  ],
   "side_panel": {
     "default_path": "src/sidepanel/index.html"
+  },
+  "background": {
+    "service_worker": "service-worker-loader.js",
+    "type": "module"
   },
   "web_accessible_resources": [
     {
       "matches": [
-        "https://*/*"
+        "<all_urls>"
       ],
       "resources": [
-        "assets/_plugin-vue_export-helper-qqerUqf-.js",
-        "assets/main.ts-CbqA5_Ch.js"
+        "**/*",
+        "*"
       ],
       "use_dynamic_url": false
     }
