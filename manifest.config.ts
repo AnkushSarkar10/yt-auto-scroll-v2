@@ -20,7 +20,7 @@ export default defineManifest({
   },
   content_scripts: [{
     js: ['src/content/main.ts'],
-    matches: ['https://www.youtube.com/shorts/*'],
+    matches: ['https://www.youtube.com/*'],
   }],
   permissions: [],
   host_permissions: ['https://www.youtube.com/*'],
