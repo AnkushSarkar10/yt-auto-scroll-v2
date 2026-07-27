@@ -1,17 +1,39 @@
 import { createApp } from 'vue'
 import App from './views/App.vue'
 
-console.log('[CRXJS] Hello world from content script!')
+let app: ReturnType<typeof createApp> | null = null
+let container: HTMLDivElement | null = null
 
-/**
- * Mount the Vue app to the DOM.
- */
 function mountApp() {
-  const container = document.createElement('div')
+  if (app) return
+
+  container = document.createElement('div')
   container.id = 'crxjs-app'
   document.body.appendChild(container)
-  const app = createApp(App)
+  app = createApp(App)
   app.mount(container)
 }
 
-mountApp()
+function unmountApp() {
+  app?.unmount()
+  container?.remove()
+  app = null
+  container = null
+}
+
+function isShortsPage() {
+  return location.pathname === '/shorts' || location.pathname.startsWith('/shorts/')
+}
+
+function syncAppWithRoute() {
+  if (isShortsPage()) {
+    mountApp()
+  } else {
+    unmountApp()
+  }
+}
+
+syncAppWithRoute()
+
+document.addEventListener('yt-navigate-finish', syncAppWithRoute)
+window.addEventListener('popstate', syncAppWithRoute)
