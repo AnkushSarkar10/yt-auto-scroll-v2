@@ -1,14 +1,33 @@
 import { createApp } from "/vendor/.vite-deps-vue.js__v--7dbd0ee5.js";
 import App from "/src/content/views/App.vue.js";
-console.log("[CRXJS] Hello world from content script!");
-/**
-* Mount the Vue app to the DOM.
-*/
+let app = null;
+let container = null;
 function mountApp() {
-	const container = document.createElement("div");
+	if (app) return;
+	container = document.createElement("div");
 	container.id = "crxjs-app";
 	document.body.appendChild(container);
-	const app = createApp(App);
+	app = createApp(App);
 	app.mount(container);
 }
-mountApp();
+function unmountApp() {
+	app?.unmount();
+	container?.remove();
+	app = null;
+	container = null;
+}
+function isShortsPage() {
+	return location.pathname === "/shorts" || location.pathname.startsWith("/shorts/");
+}
+function syncAppWithRoute() {
+	if (isShortsPage()) {
+		mountApp();
+	} else {
+		unmountApp();
+	}
+}
+syncAppWithRoute();
+// yt-navigate-finish — YouTube finished an in-app navigation (clicking a link, etc.).
+// popstate — fallback for back/forward and other history changes that might not go through YouTube’s navigation flow the same way.
+document.addEventListener("yt-navigate-finish", syncAppWithRoute);
+window.addEventListener("popstate", syncAppWithRoute);
