@@ -7,70 +7,19 @@ const toggle = () => show.value = !show.value
 </script>
 
 <template>
-  <div class="popup-container">
+  <div class="crx:fixed crx:right-0 crx:bottom-0 crx:z-100 crx:m-5 crx:flex crx:items-end crx:font-sans crx:leading-none crx:select-none">
     <div
       v-show="show"
-      class="popup-content"
-      :class="show ? 'opacity-100' : 'opacity-0'"
+      class="crx:mt-auto crx:mr-2 crx:mb-0 crx:ml-0 crx:h-min crx:w-max crx:rounded-lg crx:bg-white crx:px-4 crx:py-2 crx:text-gray-800 crx:shadow-md crx:transition-opacity crx:duration-300"
+      :class="show ? 'crx:opacity-100' : 'crx:opacity-0'"
     >
       <h1>HELLO BLAZEKUSH</h1>
     </div>
     <button
-      class="toggle-button"
+      class="crx:flex crx:h-10 crx:w-10 crx:cursor-pointer crx:justify-center crx:rounded-full crx:border-none crx:bg-[#288cd7] crx:shadow-sm crx:hover:bg-[#1e6aa3]"
       @click="toggle()"
     >
-      <img :src="Logo" alt="CRXJS logo" class="button-icon">
+      <img :src="Logo" alt="CRXJS logo" class="crx:p-1">
     </button>
   </div>
 </template>
-
-<style scoped>
-.popup-container {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  margin: 1.25rem;
-  z-index: 100;
-  display: flex;
-  align-items: flex-end;
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  user-select: none;
-  line-height: 1em;
-}
-
-.popup-content {
-  background-color: white;
-  color: #1f2937;
-  border-radius: 0.5rem;
-  box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.1),
-    0 2px 4px -2px rgb(0 0 0 / 0.1);
-  width: max-content;
-  height: min-content;
-  padding: 0.5rem 1rem;
-  margin: auto 0.5rem 0 0;
-  transition: opacity 300ms;
-}
-
-.toggle-button {
-  display: flex;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 9999px;
-  box-shadow:
-    0 1px 3px 0 rgb(0 0 0 / 0.1),
-    0 1px 2px -1px rgb(0 0 0 / 0.1);
-  cursor: pointer;
-  border: none;
-  background-color: #288cd7;
-}
-
-.toggle-button:hover {
-  background-color: #1e6aa3;
-}
-
-.button-icon {
-  padding: 4px;
-}
-</style>
