@@ -1,0 +1,5 @@
+/* Injected into youtube.com, so preflight is omitted and utilities are
+   prefixed to avoid affecting matching classes on the host page. */
+@layer theme;
+@import "tailwindcss/theme.css" layer(theme) prefix(crx);
+@import "tailwindcss/utilities.css";

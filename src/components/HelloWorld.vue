@@ -26,13 +26,7 @@ const count = ref(0)
     <a href="https://github.com/crxjs/create-crxjs" target="_blank">create-crxjs</a>, the official starter
   </p>
 
-  <p class="read-the-docs">
+  <p class="text-[#888]">
     Click on the Vite, Vue and CRXJS logos to learn more
   </p>
 </template>
-
-<style scoped>
-.read-the-docs {
-  color: #888;
-}
-</style>

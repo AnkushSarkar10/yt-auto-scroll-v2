@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './views/App.vue'
+import './style.css'
 
 let app: ReturnType<typeof createApp> | null = null
 let container: HTMLDivElement | null = null
