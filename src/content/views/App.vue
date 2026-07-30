@@ -7,6 +7,8 @@ const isPositioned = ref(false)
 const position = ref({ top: '0px', right: '0px' })
 const toggle = () => show.value = !show.value
 
+// position the toggle top right of the short
+
 let animationFrame: number | null = null
 let observedVideo: HTMLVideoElement | null = null
 let mutationObserver: MutationObserver | null = null
