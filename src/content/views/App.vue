@@ -11,23 +11,26 @@ const toggle = () => show.value = !show.value
 
 let animationFrame: number | null = null
 let observedVideo: HTMLVideoElement | null = null
+let observedMutationTarget: Element | null = null
 let mutationObserver: MutationObserver | null = null
 let resizeObserver: ResizeObserver | null = null
 
 function findVisibleShortVideo() {
+  const isVisible = (video: HTMLVideoElement) => {
+    const rect = video.getBoundingClientRect()
+    return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight
+  }
+
   const activeVideo = document.querySelector<HTMLVideoElement>(
     'ytd-reel-video-renderer[is-active] video',
   )
 
-  if (activeVideo) return activeVideo
+  if (activeVideo && isVisible(activeVideo)) return activeVideo
 
   const viewportCenter = window.innerHeight / 2
 
   return [...document.querySelectorAll<HTMLVideoElement>('ytd-reel-video-renderer video')]
-    .filter((video) => {
-      const rect = video.getBoundingClientRect()
-      return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight
-    })
+    .filter(isVisible)
     .sort((first, second) => {
       const firstRect = first.getBoundingClientRect()
       const secondRect = second.getBoundingClientRect()
@@ -54,6 +57,9 @@ function updatePosition() {
   const rect = video.getBoundingClientRect()
   const inset = 12
   const buttonSize = 40
+  const mastheadBottom = document
+    .querySelector<HTMLElement>('ytd-masthead')
+    ?.getBoundingClientRect().bottom ?? 0
   const actions = video
     .closest('ytd-reel-video-renderer')
     ?.querySelector<HTMLElement>('#actions')
@@ -63,7 +69,7 @@ function updatePosition() {
     : rect.right + inset
 
   position.value = {
-    top: `${Math.max(inset, rect.top + inset)}px`,
+    top: `${Math.max(mastheadBottom + inset, rect.top + inset)}px`,
     right: `${Math.max(inset, window.innerWidth - buttonLeft - buttonSize)}px`,
   }
   isPositioned.value = true
@@ -78,15 +84,30 @@ function schedulePositionUpdate() {
   })
 }
 
-onMounted(() => {
-  resizeObserver = new ResizeObserver(schedulePositionUpdate)
-  mutationObserver = new MutationObserver(schedulePositionUpdate)
-  mutationObserver.observe(document.body, {
+function observeShortsMutations() {
+  const shortsContainer = document.querySelector('ytd-shorts')
+    ?? document.querySelector('#shorts-container')
+  const target = shortsContainer ?? document.body
+
+  if (target === observedMutationTarget) return
+
+  mutationObserver?.disconnect()
+  mutationObserver?.observe(target, {
     childList: true,
     subtree: true,
     attributes: true,
     attributeFilter: ['is-active'],
   })
+  observedMutationTarget = target
+}
+
+onMounted(() => {
+  resizeObserver = new ResizeObserver(schedulePositionUpdate)
+  mutationObserver = new MutationObserver(() => {
+    schedulePositionUpdate()
+    observeShortsMutations()
+  })
+  observeShortsMutations()
 
   window.addEventListener('resize', schedulePositionUpdate)
   document.addEventListener('scroll', schedulePositionUpdate, true)
@@ -97,6 +118,7 @@ onBeforeUnmount(() => {
   if (animationFrame !== null) cancelAnimationFrame(animationFrame)
   mutationObserver?.disconnect()
   resizeObserver?.disconnect()
+  observedMutationTarget = null
   window.removeEventListener('resize', schedulePositionUpdate)
   document.removeEventListener('scroll', schedulePositionUpdate, true)
 })
