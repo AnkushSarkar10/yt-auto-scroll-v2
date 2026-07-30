@@ -51,10 +51,18 @@ function updatePosition() {
 
   const rect = video.getBoundingClientRect()
   const inset = 12
+  const buttonSize = 40
+  const actions = video
+    .closest('ytd-reel-video-renderer')
+    ?.querySelector<HTMLElement>('#actions')
+  const actionsRect = actions?.getBoundingClientRect()
+  const buttonLeft = actionsRect && actionsRect.width > 0
+    ? actionsRect.left + (actionsRect.width - buttonSize) / 2
+    : rect.right + inset
 
   position.value = {
     top: `${Math.max(inset, rect.top + inset)}px`,
-    right: `${Math.max(inset, window.innerWidth - rect.right + inset)}px`,
+    right: `${Math.max(inset, window.innerWidth - buttonLeft - buttonSize)}px`,
   }
   isPositioned.value = true
 }
