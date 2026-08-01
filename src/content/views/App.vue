@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
-
-type PlaybackMode = 'loop' | 'auto'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import {
+  findActiveShortVideo,
+  ShortsController,
+  type PlaybackMode,
+} from '../shorts-controller'
 
 const mode = ref<PlaybackMode>('loop')
 const isPositioned = ref(false)
 const position = ref({ top: '0px', right: '0px' })
+const shortsController = new ShortsController()
 
 function toggleMode() {
   mode.value = mode.value === 'loop' ? 'auto' : 'loop'
@@ -19,33 +23,8 @@ let observedMutationTarget: Element | null = null
 let mutationObserver: MutationObserver | null = null
 let resizeObserver: ResizeObserver | null = null
 
-function findVisibleShortVideo() {
-  const isVisible = (video: HTMLVideoElement) => {
-    const rect = video.getBoundingClientRect()
-    return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight
-  }
-
-  const activeVideo = document.querySelector<HTMLVideoElement>(
-    'ytd-reel-video-renderer[is-active] video',
-  )
-
-  if (activeVideo && isVisible(activeVideo)) return activeVideo
-
-  const viewportCenter = window.innerHeight / 2
-
-  return [...document.querySelectorAll<HTMLVideoElement>('ytd-reel-video-renderer video')]
-    .filter(isVisible)
-    .sort((first, second) => {
-      const firstRect = first.getBoundingClientRect()
-      const secondRect = second.getBoundingClientRect()
-      const firstCenter = firstRect.top + firstRect.height / 2
-      const secondCenter = secondRect.top + secondRect.height / 2
-      return Math.abs(firstCenter - viewportCenter) - Math.abs(secondCenter - viewportCenter)
-    })[0] ?? null
-}
-
 function updatePosition() {
-  const video = findVisibleShortVideo()
+  const video = findActiveShortVideo()
 
   if (!video) {
     isPositioned.value = false
@@ -106,6 +85,7 @@ function observeShortsMutations() {
 }
 
 onMounted(() => {
+  shortsController.start(mode.value)
   resizeObserver = new ResizeObserver(schedulePositionUpdate)
   mutationObserver = new MutationObserver(() => {
     schedulePositionUpdate()
@@ -119,6 +99,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  shortsController.stop()
   if (animationFrame !== null) cancelAnimationFrame(animationFrame)
   mutationObserver?.disconnect()
   resizeObserver?.disconnect()
@@ -126,6 +107,8 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', schedulePositionUpdate)
   document.removeEventListener('scroll', schedulePositionUpdate, true)
 })
+
+watch(mode, newMode => shortsController.setMode(newMode))
 </script>
 
 <template>
