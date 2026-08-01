@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import Logo from '@/assets/crx.svg'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
-const show = ref(false)
+type PlaybackMode = 'loop' | 'auto'
+
+const mode = ref<PlaybackMode>('loop')
 const isPositioned = ref(false)
 const position = ref({ top: '0px', right: '0px' })
-const toggle = () => show.value = !show.value
+
+function toggleMode() {
+  mode.value = mode.value === 'loop' ? 'auto' : 'loop'
+}
 
 // position the toggle top right of the short
 
@@ -56,7 +60,7 @@ function updatePosition() {
 
   const rect = video.getBoundingClientRect()
   const inset = 12
-  const buttonSize = 40
+  const controlWidth = 96
   const mastheadBottom = document
     .querySelector<HTMLElement>('ytd-masthead')
     ?.getBoundingClientRect().bottom ?? 0
@@ -65,12 +69,12 @@ function updatePosition() {
     ?.querySelector<HTMLElement>('#actions')
   const actionsRect = actions?.getBoundingClientRect()
   const buttonLeft = actionsRect && actionsRect.width > 0
-    ? actionsRect.left + (actionsRect.width - buttonSize) / 2
+    ? actionsRect.left + (actionsRect.width - controlWidth) / 2
     : rect.right + inset
 
   position.value = {
     top: `${Math.max(mastheadBottom + inset, rect.top + inset)}px`,
-    right: `${Math.max(inset, window.innerWidth - buttonLeft - buttonSize)}px`,
+    right: `${Math.max(inset, window.innerWidth - buttonLeft - controlWidth)}px`,
   }
   isPositioned.value = true
 }
@@ -127,21 +131,29 @@ onBeforeUnmount(() => {
 <template>
   <div
     v-show="isPositioned"
-    class="crx:fixed crx:z-100 crx:flex crx:items-start crx:font-sans crx:leading-none crx:select-none"
+    class="crx:fixed crx:z-100 crx:font-sans crx:leading-none crx:select-none"
     :style="position"
   >
-    <div
-      v-show="show"
-      class="crx:mt-0 crx:mr-2 crx:mb-0 crx:ml-0 crx:h-min crx:w-max crx:rounded-lg crx:bg-white crx:px-4 crx:py-2 crx:text-gray-800 crx:shadow-md crx:transition-opacity crx:duration-300"
-      :class="show ? 'crx:opacity-100' : 'crx:opacity-0'"
-    >
-      <h1>HELLO BLAZEKUSH</h1>
-    </div>
     <button
-      class="crx:flex crx:h-10 crx:w-10 crx:cursor-pointer crx:justify-center crx:rounded-full crx:border-none crx:bg-[#288cd7] crx:shadow-sm crx:hover:bg-[#1e6aa3]"
-      @click="toggle()"
+      class="shorts-mode-toggle"
+      :class="`shorts-mode-toggle--${mode}`"
+      type="button"
+      :aria-label="`Playback mode: ${mode}. Click to switch.`"
+      @click="toggleMode"
     >
-      <img :src="Logo" alt="CRXJS logo" class="crx:p-1">
+      <span class="shorts-mode-toggle__slider" aria-hidden="true" />
+      <span
+        class="shorts-mode-toggle__option"
+        :class="{ 'shorts-mode-toggle__option--active': mode === 'loop' }"
+      >
+        loop
+      </span>
+      <span
+        class="shorts-mode-toggle__option"
+        :class="{ 'shorts-mode-toggle__option--active': mode === 'auto' }"
+      >
+        auto
+      </span>
     </button>
   </div>
 </template>
