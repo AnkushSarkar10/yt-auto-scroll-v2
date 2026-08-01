@@ -1,1 +1,1 @@
-{"root":["./manifest.config.ts","./vite.config.ts","./src/env.d.ts","./src/components/HelloWorld.vue","./src/content/main.ts","./src/content/views/App.vue","./src/popup/App.vue","./src/popup/main.ts","./src/sidepanel/App.vue","./src/sidepanel/main.ts"],"version":"6.0.3"}
+{"root":["./manifest.config.ts","./vite.config.ts","./src/env.d.ts","./src/components/HelloWorld.vue","./src/content/main.ts","./src/content/shorts-controller.ts","./src/content/views/App.vue","./src/popup/App.vue","./src/popup/main.ts","./src/sidepanel/App.vue","./src/sidepanel/main.ts"],"version":"6.0.3"}
